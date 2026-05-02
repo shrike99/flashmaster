@@ -197,10 +197,12 @@ body {
   padding: 0 16px;
   border: 1px solid hsl(var(--input));
   background: hsl(var(--background));
+  color: hsl(var(--foreground));  /* ← Added this */
 }
 
 .btn-outline:hover {
   background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));  /* ← Added this */
 }
 
 .btn-ghost {
