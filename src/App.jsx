@@ -1380,6 +1380,12 @@ function MyCardsPage() {
 		const handleKey = (e) => {
 			if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
+			const currentCard = cards.find((c) => c.id === studyDeck[si]);
+			const isCloze = currentCard?.type === 'cloze';
+
+			// For cloze cards, don't allow keyboard shortcuts while checking answers
+			if (isCloze) return;
+
 			if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
 				e.preventDefault();
 				setFlipped((f) => !f);
@@ -1394,7 +1400,7 @@ function MyCardsPage() {
 
 		window.addEventListener('keydown', handleKey);
 		return () => window.removeEventListener('keydown', handleKey);
-	}, [study, flipped, si, studyDeck]);
+	}, [study, flipped, si, studyDeck, cards]);
 
 	// Swipe handlers
 	const handleDragStart = (e) => {
@@ -1448,6 +1454,14 @@ function MyCardsPage() {
 			}
 			setDragOffset({ x: 0, y: 0 });
 		}
+	};
+
+	const handleCardClick = () => {
+		// Don't flip if we just finished dragging
+		if (Math.abs(dragOffset.x) > 5 || Math.abs(dragOffset.y) > 5) {
+			return;
+		}
+		setFlipped((f) => !f);
 	};
 
 	const wrongCards = cards.filter((c) => results[c.id] === 'wrong');
@@ -1598,7 +1612,7 @@ function MyCardsPage() {
 				</div>
 
 				<div className="study-card-wrapper" onMouseDown={handleDragStart} onMouseMove={handleDragMove} onMouseUp={handleDragEnd} onMouseLeave={handleDragEnd} onTouchStart={handleDragStart} onTouchMove={handleDragMove} onTouchEnd={handleDragEnd}>
-					<div ref={cardRef} className={`study-card${flipped ? ' flipped' : ''}${flipped ? ' swipeable' : ''}`} onClick={() => !isDragging && setFlipped((f) => !f)}>
+					<div ref={cardRef} className={`study-card${flipped ? ' flipped' : ''}${flipped ? ' swipeable' : ''}`} onClick={handleCardClick}>
 						{flipped && (
 							<>
 								<div className="swipe-indicator swipe-left" style={{ opacity: dragOffset.x < 0 ? swipeOpacity : 0 }}>
