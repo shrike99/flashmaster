@@ -648,6 +648,7 @@ body {
   transform-style: preserve-3d;
   cursor: pointer;
   user-select: none;
+  transform: rotateY(0deg);
 }
 
 .study-card.flipped {
@@ -1351,12 +1352,21 @@ function MyCardsPage() {
 		setResults(newResults);
 
 		if (si < studyDeck.length - 1) {
-			setSi((i) => i + 1);
+			// Reset all card state when moving to next card
 			setFlipped(false);
 			setClozeAnswers({});
 			setClozeChecked(false);
 			setDragOffset({ x: 0, y: 0 });
 			setImageLoaded({});
+			setIsDragging(false);
+			
+			// Reset card transform if it exists
+			if (cardRef.current) {
+				cardRef.current.style.transform = '';
+			}
+			
+			// Move to next card
+			setSi((i) => i + 1);
 		} else {
 			const right = Object.values(newResults).filter((v) => v === 'right').length;
 			const wrong = Object.values(newResults).filter((v) => v === 'wrong').length;
@@ -1463,6 +1473,11 @@ function MyCardsPage() {
 		}
 		setFlipped((f) => !f);
 	};
+
+	// Reset flipped state when card index changes
+	useEffect(() => {
+		setFlipped(false);
+	}, [si]);
 
 	const wrongCards = cards.filter((c) => results[c.id] === 'wrong');
 
@@ -1611,7 +1626,7 @@ function MyCardsPage() {
 					<div className="progress-fill" style={{ width: `${pct}%` }} />
 				</div>
 
-				<div className="study-card-wrapper" onMouseDown={handleDragStart} onMouseMove={handleDragMove} onMouseUp={handleDragEnd} onMouseLeave={handleDragEnd} onTouchStart={handleDragStart} onTouchMove={handleDragMove} onTouchEnd={handleDragEnd}>
+				<div className="study-card-wrapper" key={`card-${si}-${studyDeck[si]}`} onMouseDown={handleDragStart} onMouseMove={handleDragMove} onMouseUp={handleDragEnd} onMouseLeave={handleDragEnd} onTouchStart={handleDragStart} onTouchMove={handleDragMove} onTouchEnd={handleDragEnd}>
 					<div ref={cardRef} className={`study-card${flipped ? ' flipped' : ''}${flipped ? ' swipeable' : ''}`} onClick={handleCardClick}>
 						{flipped && (
 							<>
