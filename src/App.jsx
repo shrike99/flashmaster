@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   SLEEK BLACK & WHITE FLASHCARD APP - SHADCN NAVBAR EDITION
+   SLEEK BLACK & WHITE FLASHCARD APP - MOBILE RESPONSIVE
    Design System: shadcn/ui inspired
    Color Scheme: Pure monochrome with blue accents
    Typography: Inter for everything
@@ -73,6 +73,7 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ─── LAYOUT ───────────────────────────────────────────────────────────────── */
@@ -91,6 +92,9 @@ body {
   align-items: center;
   height: 56px;
   flex-shrink: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .navbar-brand {
@@ -100,7 +104,8 @@ body {
   padding: 0 16px;
   height: 100%;
   border-right: 1px solid hsl(var(--border));
-  min-width: 200px;
+  min-width: auto;
+  flex-shrink: 0;
 }
 
 .navbar-logo {
@@ -108,6 +113,17 @@ body {
   font-weight: 600;
   letter-spacing: -0.01em;
   color: hsl(var(--foreground));
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .navbar-logo {
+    display: none;
+  }
+  .navbar-brand {
+    min-width: auto;
+    padding: 0 12px;
+  }
 }
 
 .navbar-nav {
@@ -116,14 +132,22 @@ body {
   flex: 1;
   padding: 0 6px;
   gap: 1px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.navbar-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .navbar-actions {
   display: flex;
   gap: 2px;
   align-items: center;
-  padding: 0 16px;
+  padding: 0 8px;
   border-left: 1px solid hsl(var(--border));
+  flex-shrink: 0;
 }
 
 .nav-link {
@@ -143,6 +167,8 @@ body {
   font-family: inherit;
   white-space: nowrap;
   position: relative;
+  flex-shrink: 0;
+  touch-action: manipulation;
 }
 
 .nav-link:hover {
@@ -167,27 +193,33 @@ body {
   border-radius: 2px 2px 0 0;
 }
 
+@media (max-width: 640px) {
+  .nav-link {
+    padding: 0 10px;
+    font-size: 12px;
+  }
+  .nav-link svg {
+    display: none;
+  }
+}
+
 .main {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   background: hsl(var(--background));
+  -webkit-overflow-scrolling: touch;
 }
 
 .main-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 48px 32px;
-}
-
-@media (max-width: 639px) {
-  .main-content {
-    padding: 32px 20px;
-  }
+  padding: 24px 16px;
 }
 
 @media (min-width: 640px) {
   .main-content {
-    padding: 56px 48px;
+    padding: 48px 32px;
   }
 }
 
@@ -214,6 +246,8 @@ body {
   outline: none;
   border: 1px solid transparent;
   font-family: inherit;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn:disabled {
@@ -285,6 +319,21 @@ body {
   padding: 0;
 }
 
+@media (max-width: 640px) {
+  .btn {
+    font-size: 12px;
+  }
+  .btn-default, .btn-outline, .btn-ghost, .btn-destructive {
+    height: 38px;
+    padding: 0 14px;
+  }
+  .btn-sm {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+}
+
 /* Card */
 .card {
   border-radius: 8px;
@@ -295,13 +344,25 @@ body {
 }
 
 .card-header {
-  padding: 24px 24px 0;
+  padding: 20px 20px 0;
+}
+
+@media (max-width: 640px) {
+  .card-header {
+    padding: 16px 16px 0;
+  }
 }
 
 .card-title {
   font-size: 18px;
   font-weight: 600;
   letter-spacing: -0.01em;
+}
+
+@media (max-width: 640px) {
+  .card-title {
+    font-size: 16px;
+  }
 }
 
 .card-description {
@@ -311,7 +372,13 @@ body {
 }
 
 .card-content {
-  padding: 24px;
+  padding: 20px;
+}
+
+@media (max-width: 640px) {
+  .card-content {
+    padding: 16px;
+  }
 }
 
 /* Input */
@@ -337,6 +404,13 @@ body {
 
 .input::placeholder {
   color: hsl(var(--muted-foreground));
+}
+
+@media (max-width: 640px) {
+  .input {
+    height: 38px;
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
 }
 
 .textarea {
@@ -365,6 +439,13 @@ body {
   color: hsl(var(--muted-foreground));
 }
 
+@media (max-width: 640px) {
+  .textarea {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+    padding: 12px;
+  }
+}
+
 /* Label */
 .label {
   font-size: 14px;
@@ -372,6 +453,13 @@ body {
   display: block;
   margin-bottom: 10px;
   color: hsl(var(--foreground));
+}
+
+@media (max-width: 640px) {
+  .label {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
 }
 
 /* Badge */
@@ -385,6 +473,13 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border: 1px solid transparent;
+}
+
+@media (max-width: 640px) {
+  .badge {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
 }
 
 .badge-default {
@@ -410,15 +505,27 @@ body {
 
 /* ─── PAGE LAYOUT ──────────────────────────────────────────────────────────── */
 .page-header {
-  margin-bottom: 40px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 640px) {
+  .page-header {
+    margin-bottom: 24px;
+  }
 }
 
 .page-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 600;
   letter-spacing: -0.025em;
   margin-bottom: 8px;
   line-height: 1.2;
+}
+
+@media (max-width: 640px) {
+  .page-title {
+    font-size: 24px;
+  }
 }
 
 .page-description {
@@ -427,23 +534,42 @@ body {
   line-height: 1.6;
 }
 
+@media (max-width: 640px) {
+  .page-description {
+    font-size: 14px;
+  }
+}
+
 .page-actions {
   display: flex;
-  gap: 10px;
-  margin-top: 24px;
+  gap: 8px;
+  margin-top: 20px;
   flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .page-actions {
+    gap: 6px;
+  }
 }
 
 /* ─── CARDS GRID ───────────────────────────────────────────────────────────── */
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 }
 
 @media (min-width: 640px) {
   .cards-grid {
-    gap: 24px;
+    gap: 20px;
   }
 }
 
@@ -455,6 +581,7 @@ body {
   overflow: hidden;
   transition: all 0.2s;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .flashcard:hover {
@@ -464,36 +591,68 @@ body {
 
 .flashcard-image {
   width: 100%;
-  height: 180px;
+  height: 160px;
   object-fit: cover;
   background: hsl(var(--muted));
   border-bottom: 1px solid hsl(var(--border));
 }
 
+@media (max-width: 640px) {
+  .flashcard-image {
+    height: 140px;
+  }
+}
+
 .flashcard-body {
-  padding: 24px;
-  min-height: 160px;
+  padding: 20px;
+  min-height: 140px;
+}
+
+@media (max-width: 640px) {
+  .flashcard-body {
+    padding: 16px;
+    min-height: 120px;
+  }
 }
 
 .flashcard-badges {
   display: flex;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 640px) {
+  .flashcard-badges {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
 }
 
 .flashcard-question {
   font-size: 15px;
   font-weight: 500;
   line-height: 1.6;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 640px) {
+  .flashcard-question {
+    font-size: 14px;
+  }
 }
 
 .flashcard-answer {
   font-size: 14px;
   color: hsl(var(--muted-foreground));
   line-height: 1.6;
-  padding-top: 16px;
+  padding-top: 12px;
   border-top: 1px solid hsl(var(--border));
+}
+
+@media (max-width: 640px) {
+  .flashcard-answer {
+    font-size: 13px;
+  }
 }
 
 .flashcard-actions {
@@ -502,12 +661,25 @@ body {
   right: 12px;
   display: flex;
   gap: 4px;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.2s;
+  z-index: 10;
 }
 
-.flashcard:hover .flashcard-actions {
-  opacity: 1;
+@media (min-width: 641px) {
+  .flashcard-actions {
+    opacity: 0;
+  }
+  .flashcard:hover .flashcard-actions {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .flashcard-actions {
+    top: 8px;
+    right: 8px;
+  }
 }
 
 .status-indicator {
@@ -517,6 +689,13 @@ body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
+}
+
+@media (max-width: 640px) {
+  .status-indicator {
+    top: 8px;
+    left: 8px;
+  }
 }
 
 .status-success {
@@ -531,16 +710,29 @@ body {
 .creator-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   margin-bottom: 24px;
+}
+
+@media (max-width: 640px) {
+  .creator-list {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
 }
 
 .creator-card {
   border-radius: 8px;
   border: 1px solid hsl(var(--border));
   background: hsl(var(--card));
-  padding: 24px;
+  padding: 20px;
   transition: all 0.2s;
+}
+
+@media (max-width: 640px) {
+  .creator-card {
+    padding: 16px;
+  }
 }
 
 .creator-card.focused {
@@ -552,7 +744,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 640px) {
+  .creator-header {
+    margin-bottom: 12px;
+  }
 }
 
 .creator-number {
@@ -563,23 +761,36 @@ body {
   color: hsl(var(--muted-foreground));
 }
 
+@media (max-width: 640px) {
+  .creator-number {
+    font-size: 10px;
+  }
+}
+
 .creator-section {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .creator-section:last-child {
   margin-bottom: 0;
 }
 
+@media (max-width: 640px) {
+  .creator-section {
+    margin-bottom: 12px;
+  }
+}
+
 .creator-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 16px;
 }
 
 @media (max-width: 768px) {
   .creator-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 }
 
@@ -592,7 +803,7 @@ body {
 .study-container {
   max-width: 700px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 16px;
 }
 
 @media (min-width: 640px) {
@@ -605,19 +816,37 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 640px) {
+  .study-header {
+    margin-bottom: 16px;
+  }
 }
 
 .study-info h1 {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
   margin-bottom: 6px;
   line-height: 1.2;
 }
 
+@media (max-width: 640px) {
+  .study-info h1 {
+    font-size: 20px;
+  }
+}
+
 .study-info p {
   font-size: 14px;
   color: hsl(var(--muted-foreground));
+}
+
+@media (max-width: 640px) {
+  .study-info p {
+    font-size: 13px;
+  }
 }
 
 .progress-bar {
@@ -626,7 +855,14 @@ body {
   background: hsl(var(--secondary));
   border-radius: 999px;
   overflow: hidden;
-  margin-bottom: 36px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 640px) {
+  .progress-bar {
+    height: 5px;
+    margin-bottom: 20px;
+  }
 }
 
 .progress-fill {
@@ -639,16 +875,30 @@ body {
 .study-card-wrapper {
   perspective: 1200px;
   margin-bottom: 24px;
+  touch-action: pan-y;
+}
+
+@media (max-width: 640px) {
+  .study-card-wrapper {
+    margin-bottom: 16px;
+  }
 }
 
 .study-card {
   position: relative;
-  min-height: 400px;
+  min-height: 350px;
   transition: transform 0.4s ease;
   transform-style: preserve-3d;
   cursor: pointer;
   user-select: none;
   transform: rotateY(0deg);
+  touch-action: none;
+}
+
+@media (max-width: 640px) {
+  .study-card {
+    min-height: 300px;
+  }
 }
 
 .study-card.flipped {
@@ -683,7 +933,7 @@ body {
 
 .card-image {
   width: 100%;
-  height: 220px;
+  height: 180px;
   object-fit: cover;
   background: hsl(var(--muted));
   border-bottom: 1px solid hsl(var(--border));
@@ -692,18 +942,30 @@ body {
   transition: opacity 0.3s ease;
 }
 
+@media (max-width: 640px) {
+  .card-image {
+    height: 140px;
+  }
+}
+
 .card-image.loaded {
   opacity: 1;
 }
 
 .card-body {
   flex: 1;
-  padding: 48px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+@media (max-width: 640px) {
+  .card-body {
+    padding: 24px 20px;
+  }
 }
 
 .card-label {
@@ -712,46 +974,88 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: hsl(var(--muted-foreground));
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 640px) {
+  .card-label {
+    font-size: 10px;
+    margin-bottom: 10px;
+  }
 }
 
 .card-text {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .card-text {
+    font-size: 16px;
+  }
 }
 
 .card-hint {
   font-size: 13px;
   color: hsl(var(--muted-foreground));
-  margin-top: 24px;
+  margin-top: 20px;
+}
+
+@media (max-width: 640px) {
+  .card-hint {
+    font-size: 12px;
+    margin-top: 16px;
+  }
 }
 
 .swipe-indicator {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 72px;
+  font-size: 60px;
   opacity: 0;
   transition: opacity 0.2s;
   pointer-events: none;
   z-index: 10;
 }
 
+@media (max-width: 640px) {
+  .swipe-indicator {
+    font-size: 48px;
+  }
+}
+
 .swipe-left {
-  left: 60px;
+  left: 40px;
   color: hsl(var(--destructive));
 }
 
 .swipe-right {
-  right: 60px;
+  right: 40px;
   color: hsl(120 100% 35%);
+}
+
+@media (max-width: 640px) {
+  .swipe-left {
+    left: 20px;
+  }
+  .swipe-right {
+    right: 20px;
+  }
 }
 
 .study-actions {
   display: flex;
-  gap: 16px;
-  margin-top: 28px;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+@media (max-width: 640px) {
+  .study-actions {
+    gap: 10px;
+    margin-top: 16px;
+  }
 }
 
 .study-actions .btn {
@@ -760,10 +1064,17 @@ body {
 
 .keyboard-hint {
   text-align: center;
-  margin-top: 28px;
+  margin-top: 20px;
   font-size: 13px;
   color: hsl(var(--muted-foreground));
   line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .keyboard-hint {
+    font-size: 11px;
+    margin-top: 16px;
+  }
 }
 
 .kbd {
@@ -778,56 +1089,107 @@ body {
   font-weight: 500;
 }
 
+@media (max-width: 640px) {
+  .kbd {
+    padding: 2px 6px;
+    font-size: 11px;
+  }
+}
+
 /* ─── STATS ────────────────────────────────────────────────────────────────── */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-bottom: 48px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 640px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
 }
 
 .stat-card {
   border-radius: 8px;
   border: 1px solid hsl(var(--border));
   background: hsl(var(--card));
-  padding: 24px;
+  padding: 20px;
+}
+
+@media (max-width: 640px) {
+  .stat-card {
+    padding: 16px;
+  }
 }
 
 .stat-value {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 600;
   line-height: 1;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 640px) {
+  .stat-value {
+    font-size: 28px;
+  }
 }
 
 .stat-label {
-  font-size: 13px;
+  font-size: 12px;
   color: hsl(var(--muted-foreground));
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
+@media (max-width: 640px) {
+  .stat-label {
+    font-size: 11px;
+  }
+}
+
 .history-section h2 {
   font-size: 20px;
   font-weight: 600;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 640px) {
+  .history-section h2 {
+    font-size: 18px;
+  }
 }
 
 .history-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .history-list {
+    gap: 8px;
+  }
 }
 
 .history-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px;
+  padding: 16px;
   border-radius: 8px;
   border: 1px solid hsl(var(--border));
   background: hsl(var(--card));
   transition: all 0.2s;
+}
+
+@media (max-width: 640px) {
+  .history-item {
+    padding: 14px;
+  }
 }
 
 .history-item:hover {
@@ -838,7 +1200,7 @@ body {
 .history-info {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .history-result {
@@ -846,14 +1208,32 @@ body {
   font-weight: 500;
 }
 
+@media (max-width: 640px) {
+  .history-result {
+    font-size: 14px;
+  }
+}
+
 .history-date {
   font-size: 13px;
   color: hsl(var(--muted-foreground));
 }
 
+@media (max-width: 640px) {
+  .history-date {
+    font-size: 12px;
+  }
+}
+
 .history-score {
   font-size: 15px;
   font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .history-score {
+    font-size: 14px;
+  }
 }
 
 /* ─── MODAL ────────────────────────────────────────────────────────────────── */
@@ -867,12 +1247,13 @@ body {
   justify-content: center;
   z-index: 100;
   animation: fadeIn 0.2s;
+  padding: 16px;
 }
 
 .modal {
   width: 500px;
-  max-width: 94vw;
-  max-height: 90vh;
+  max-width: 100%;
+  max-height: calc(100vh - 32px);
   overflow-y: auto;
   border-radius: 8px;
   border: 1px solid hsl(var(--border));
@@ -885,7 +1266,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 24px 0;
+  padding: 20px 20px 0;
+}
+
+@media (max-width: 640px) {
+  .modal-header {
+    padding: 16px 16px 0;
+  }
 }
 
 .modal-title {
@@ -893,15 +1280,34 @@ body {
   font-weight: 600;
 }
 
+@media (max-width: 640px) {
+  .modal-title {
+    font-size: 16px;
+  }
+}
+
 .modal-body {
-  padding: 24px;
+  padding: 20px;
+}
+
+@media (max-width: 640px) {
+  .modal-body {
+    padding: 16px;
+  }
 }
 
 .modal-footer {
   display: flex;
   gap: 8px;
   justify-content: flex-end;
-  padding: 0 24px 24px;
+  padding: 0 20px 20px;
+}
+
+@media (max-width: 640px) {
+  .modal-footer {
+    padding: 0 16px 16px;
+    gap: 6px;
+  }
 }
 
 .field {
@@ -912,16 +1318,34 @@ body {
   margin-bottom: 0;
 }
 
+@media (max-width: 640px) {
+  .field {
+    margin-bottom: 12px;
+  }
+}
+
 /* ─── UTILITIES ────────────────────────────────────────────────────────────── */
 .empty-state {
   text-align: center;
-  padding: 80px 32px;
+  padding: 60px 24px;
   color: hsl(var(--muted-foreground));
+}
+
+@media (max-width: 640px) {
+  .empty-state {
+    padding: 40px 20px;
+  }
 }
 
 .empty-state p {
   font-size: 15px;
   line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .empty-state p {
+    font-size: 14px;
+  }
 }
 
 .tabs {
@@ -930,6 +1354,13 @@ body {
   padding: 4px;
   background: hsl(var(--muted));
   border-radius: 6px;
+}
+
+@media (max-width: 640px) {
+  .tabs {
+    height: 34px;
+    width: 100%;
+  }
 }
 
 .tab {
@@ -946,6 +1377,15 @@ body {
   cursor: pointer;
   transition: all 0.15s;
   font-family: inherit;
+  touch-action: manipulation;
+}
+
+@media (max-width: 640px) {
+  .tab {
+    flex: 1;
+    padding: 0 8px;
+    font-size: 12px;
+  }
 }
 
 .tab.active {
@@ -955,8 +1395,9 @@ body {
 
 .toast {
   position: fixed;
-  top: 80px;
-  right: 20px;
+  top: 70px;
+  right: 16px;
+  left: 16px;
   z-index: 200;
   display: flex;
   align-items: center;
@@ -971,6 +1412,14 @@ body {
   animation: slideIn 0.3s;
 }
 
+@media (min-width: 640px) {
+  .toast {
+    left: auto;
+    right: 20px;
+    max-width: 400px;
+  }
+}
+
 .zoom-overlay {
   position: fixed;
   inset: 0;
@@ -980,11 +1429,12 @@ body {
   justify-content: center;
   z-index: 200;
   cursor: zoom-out;
+  padding: 16px;
 }
 
 .zoom-image {
-  max-width: 90vw;
-  max-height: 90vh;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
   border-radius: 8px;
 }
@@ -1000,6 +1450,13 @@ body {
   display: block;
 }
 
+@media (max-width: 640px) {
+  .thumbnail {
+    width: 70px;
+    height: 52px;
+  }
+}
+
 .thumbnail-delete {
   position: absolute;
   top: 4px;
@@ -1011,12 +1468,19 @@ body {
   padding: 2px 6px;
   font-size: 11px;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 /* Markdown */
 .markdown {
   font-size: 14px;
   line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .markdown {
+    font-size: 13px;
+  }
 }
 
 .markdown p {
@@ -1103,6 +1567,18 @@ body {
 
 .swipe-out {
   animation: swipeOut 0.3s ease forwards;
+}
+
+/* Prevent pull-to-refresh on mobile */
+body {
+  overscroll-behavior-y: contain;
+}
+
+/* Improve touch scrolling */
+.main,
+.modal,
+.navbar-nav {
+  -webkit-overflow-scrolling: touch;
 }
 `;
 
@@ -1533,7 +2009,7 @@ function MyCardsPage() {
 							/>
 						)}
 						<div className="card-content" style={{ minHeight: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-							<div style={{ fontSize: '18px', lineHeight: '2', textAlign: 'center' }}>
+							<div style={{ fontSize: '16px', lineHeight: '2', textAlign: 'center', width: '100%', padding: '0 10px' }}>
 								{parts.map((p, i) =>
 									p.type === 'text' ? (
 										<span key={i}>{p.val}</span>
@@ -1558,6 +2034,7 @@ function MyCardsPage() {
 													style={{
 														display: 'inline-block',
 														width: Math.max(100, p.val.length * 11),
+														maxWidth: '90%',
 														height: '32px',
 														textAlign: 'center',
 														margin: '0 4px',
@@ -1595,7 +2072,7 @@ function MyCardsPage() {
 						</div>
 					)}
 
-					<div className="keyboard-hint">
+					<div className="keyboard-hint" style={{ display: window.innerWidth > 640 ? 'block' : 'none' }}>
 						<span className="kbd">Space</span> flip ·<span className="kbd">←</span> or <span className="kbd">1</span> wrong ·<span className="kbd">→</span> or <span className="kbd">2</span> right
 					</div>
 				</div>
@@ -1657,7 +2134,7 @@ function MyCardsPage() {
 								<div className="card-text markdown">
 									<ReactMarkdown>{card.q}</ReactMarkdown>
 								</div>
-								<div className="card-hint">Click or press Space to flip</div>
+								<div className="card-hint">Tap to flip</div>
 							</div>
 						</div>
 
@@ -1679,7 +2156,7 @@ function MyCardsPage() {
 								<div className="card-text markdown">
 									<ReactMarkdown>{card.a}</ReactMarkdown>
 								</div>
-								<div className="card-hint">Click or press Space to flip back</div>
+								<div className="card-hint">Tap to flip back</div>
 							</div>
 						</div>
 					</div>
@@ -1697,10 +2174,10 @@ function MyCardsPage() {
 						</button>
 					</div>
 				) : (
-					<div style={{ marginTop: '24px', textAlign: 'center', fontSize: '13px', color: 'hsl(var(--muted-foreground))' }}>Flip the card first, then mark your result</div>
+					<div style={{ marginTop: '20px', textAlign: 'center', fontSize: '13px', color: 'hsl(var(--muted-foreground))' }}>Flip the card first, then mark your result</div>
 				)}
 
-				<div className="keyboard-hint">
+				<div className="keyboard-hint" style={{ display: window.innerWidth > 640 ? 'block' : 'none' }}>
 					<span className="kbd">Space</span> or <span className="kbd">↑</span>/<span className="kbd">↓</span> flip ·<span className="kbd">←</span> or <span className="kbd">1</span> wrong ·<span className="kbd">→</span> or <span className="kbd">2</span> right · Drag left/right to swipe
 				</div>
 			</div>
@@ -1855,12 +2332,12 @@ function MyCardsPage() {
 					{dueCards.length > 0 && (
 						<button className="btn btn-outline" onClick={() => startStudy(dueCards.map((c) => c.id))}>
 							<Icon name="clock" size={16} />
-							Review {dueCards.length} Due
+							Review {dueCards.length}
 						</button>
 					)}
 					{wrongCards.length > 0 && (
 						<button className="btn btn-destructive" onClick={() => startStudy(wrongCards.map((c) => c.id))}>
-							Retry {wrongCards.length} Wrong
+							Retry {wrongCards.length}
 						</button>
 					)}
 					<button className="btn btn-default" onClick={() => startStudy(cards.map((c) => c.id))}>
@@ -2169,9 +2646,7 @@ function AddCardsPage() {
 
 			<div className="page-header">
 				<h1 className="page-title">Add Flashcards</h1>
-				<p className="page-description">
-					Create multiple cards • Markdown supported • Paste images • Press <span className="kbd">Tab</span> to add new card
-				</p>
+				<p className="page-description">Create cards • Markdown supported • Paste images</p>
 			</div>
 
 			<div className="creator-list">
@@ -2271,7 +2746,7 @@ function AddCardsPage() {
 			<div className="page-actions">
 				<button className="btn btn-outline" onClick={addCreatorCard}>
 					<Icon name="plus" size={16} />
-					Add Another Card
+					Add Another
 				</button>
 				<button className="btn btn-default" onClick={saveAllCards}>
 					Save All Cards
@@ -2308,7 +2783,7 @@ function StatsPage() {
 				<div className="page-actions">
 					<button className="btn btn-destructive" onClick={() => setShowResetModal(true)}>
 						<Icon name="alert" size={16} />
-						Reset All Stats
+						Reset Stats
 					</button>
 				</div>
 			</div>
@@ -2320,11 +2795,11 @@ function StatsPage() {
 				</div>
 				<div className="stat-card">
 					<div className="stat-value">{dueCards}</div>
-					<div className="stat-label">Due for Review</div>
+					<div className="stat-label">Due</div>
 				</div>
 				<div className="stat-card">
 					<div className="stat-value">{totalStudied}</div>
-					<div className="stat-label">Cards Studied</div>
+					<div className="stat-label">Studied</div>
 				</div>
 				<div className="stat-card">
 					<div className="stat-value" style={{ color: 'hsl(120 100% 35%)' }}>
