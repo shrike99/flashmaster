@@ -644,7 +644,7 @@ body {
 .study-card {
   position: relative;
   min-height: 400px;
-  transition: transform 0.5s;
+  transition: transform 0.4s ease;
   transform-style: preserve-3d;
   cursor: pointer;
   user-select: none;
@@ -656,7 +656,6 @@ body {
 
 .study-card.swipeable {
   cursor: grab;
-  transition: none;
 }
 
 .study-card.swipeable:active {
@@ -667,6 +666,7 @@ body {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   border-radius: 8px;
   border: 1px solid hsl(var(--border));
   background: hsl(var(--card));
@@ -687,6 +687,12 @@ body {
   background: hsl(var(--muted));
   border-bottom: 1px solid hsl(var(--border));
   cursor: zoom-in;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card-image.loaded {
+  opacity: 1;
 }
 
 .card-body {
@@ -1293,6 +1299,7 @@ function MyCardsPage() {
 	const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 	const [showToast, setShowToast] = useState(false);
 	const [toastMessage, setToastMessage] = useState('');
+	const [imageLoaded, setImageLoaded] = useState({});
 	const cardRef = useRef(null);
 	const editImgRef = useRef();
 
@@ -1328,6 +1335,7 @@ function MyCardsPage() {
 		setResults({});
 		setClozeAnswers({});
 		setClozeChecked(false);
+		setImageLoaded({});
 		setStudy('studying');
 	};
 
@@ -1348,6 +1356,7 @@ function MyCardsPage() {
 			setClozeAnswers({});
 			setClozeChecked(false);
 			setDragOffset({ x: 0, y: 0 });
+			setImageLoaded({});
 		} else {
 			const right = Object.values(newResults).filter((v) => v === 'right').length;
 			const wrong = Object.values(newResults).filter((v) => v === 'wrong').length;
@@ -1371,7 +1380,7 @@ function MyCardsPage() {
 		const handleKey = (e) => {
 			if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-			if (e.key === ' ' || e.key === 'ArrowUp') {
+			if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
 				e.preventDefault();
 				setFlipped((f) => !f);
 			} else if ((e.key === 'ArrowLeft' || e.key === '1') && flipped) {
@@ -1485,8 +1494,9 @@ function MyCardsPage() {
 						{showImgFront && (
 							<img
 								src={card.imgs[0]}
-								className="card-image"
+								className={`card-image${imageLoaded[`${si}-front`] ? ' loaded' : ''}`}
 								alt=""
+								onLoad={() => setImageLoaded((prev) => ({ ...prev, [`${si}-front`]: true }))}
 								onClick={(e) => {
 									e.stopPropagation();
 									setZoomImg(card.imgs[0]);
@@ -1604,8 +1614,9 @@ function MyCardsPage() {
 							{showImgFront && (
 								<img
 									src={card.imgs[0]}
-									className="card-image"
+									className={`card-image${imageLoaded[`${si}-front`] ? ' loaded' : ''}`}
 									alt=""
+									onLoad={() => setImageLoaded((prev) => ({ ...prev, [`${si}-front`]: true }))}
 									onClick={(e) => {
 										e.stopPropagation();
 										setZoomImg(card.imgs[0]);
@@ -1613,10 +1624,11 @@ function MyCardsPage() {
 								/>
 							)}
 							<div className="card-body">
+								<div className="card-label">Question</div>
 								<div className="card-text markdown">
 									<ReactMarkdown>{card.q}</ReactMarkdown>
 								</div>
-								<div className="card-hint">Click to reveal answer</div>
+								<div className="card-hint">Click or press Space to flip</div>
 							</div>
 						</div>
 
@@ -1624,8 +1636,9 @@ function MyCardsPage() {
 							{showImgBack && (
 								<img
 									src={card.imgs[0]}
-									className="card-image"
+									className={`card-image${imageLoaded[`${si}-back`] ? ' loaded' : ''}`}
 									alt=""
+									onLoad={() => setImageLoaded((prev) => ({ ...prev, [`${si}-back`]: true }))}
 									onClick={(e) => {
 										e.stopPropagation();
 										setZoomImg(card.imgs[0]);
@@ -1637,6 +1650,7 @@ function MyCardsPage() {
 								<div className="card-text markdown">
 									<ReactMarkdown>{card.a}</ReactMarkdown>
 								</div>
+								<div className="card-hint">Click or press Space to flip back</div>
 							</div>
 						</div>
 					</div>
@@ -1658,7 +1672,7 @@ function MyCardsPage() {
 				)}
 
 				<div className="keyboard-hint">
-					<span className="kbd">Space</span> flip ·<span className="kbd">←</span> or <span className="kbd">1</span> wrong ·<span className="kbd">→</span> or <span className="kbd">2</span> right · Drag left/right to swipe
+					<span className="kbd">Space</span> or <span className="kbd">↑</span>/<span className="kbd">↓</span> flip ·<span className="kbd">←</span> or <span className="kbd">1</span> wrong ·<span className="kbd">→</span> or <span className="kbd">2</span> right · Drag left/right to swipe
 				</div>
 			</div>
 		);
@@ -1702,13 +1716,16 @@ function MyCardsPage() {
 				</div>
 
 				<div className="page-actions">
+					<button className="btn btn-outline" onClick={() => setStudy('idle')}>
+						Back to Cards
+					</button>
 					<button className="btn btn-outline" onClick={() => startStudy(studyDeck)}>
 						<Icon name="rotate" size={16} />
 						Redo Round
 					</button>
 					{wrongCount > 0 && (
 						<button
-							className="btn btn-default"
+							className="btn btn-destructive"
 							onClick={() =>
 								startStudy(
 									Object.keys(results)
@@ -1721,6 +1738,9 @@ function MyCardsPage() {
 							Study {wrongCount} Wrong
 						</button>
 					)}
+					<button className="btn btn-default" onClick={() => startStudy(cards.map((c) => c.id))}>
+						Study All Cards
+					</button>
 				</div>
 			</div>
 		);
